@@ -1,22 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light palette */
+  --background: #F9FAFB; /* Background / Surface */
+  --foreground: #1F2937; /* Neutral / Text Primary */
+  --card: #FFFFFF; /* Card / Secondary Surface */
+  --primary: #1C6E8C; /* Primary Accent */
+  --secondary: #E63946; /* Secondary Accent */
+  --text-secondary: #6B7280; /* Neutral / Text Secondary */
+  --success: #00B37E; /* Success / Green */
+  --warning: #FACC15; /* Warning / Yellow */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Using CSS variables directly with Tailwind arbitrary values (e.g., bg-[var(--primary)]).
+   We avoid @theme inline to keep tooling happy. */
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark palette via OS preference */
+    --background: #0E1116;
+    --foreground: #F3F4F6;
+    --card: #1A1D23;
+    --primary: #58A6FF;
+    --secondary: #FF6B6B;
+    --text-secondary: #9CA3AF;
+    --success: #32D296;
+    --warning: #FCD34D;
   }
+}
+
+/* Manual override via class on <html> added by ThemeToggle */
+.dark {
+  --background: #0E1116;
+  --foreground: #F3F4F6;
+  --card: #1A1D23;
+  --primary: #58A6FF;
+  --secondary: #FF6B6B;
+  --text-secondary: #9CA3AF;
+  --success: #32D296;
+  --warning: #FCD34D;
+}
+.light {
+  --background: #F9FAFB;
+  --foreground: #1F2937;
+  --card: #FFFFFF;
+  --primary: #1C6E8C;
+  --secondary: #E63946;
+  --text-secondary: #6B7280;
+  --success: #00B37E;
+  --warning: #FACC15;
 }
 
 body {
