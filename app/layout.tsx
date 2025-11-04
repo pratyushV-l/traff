@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ThemeToggle from "@/app/components/ThemeToggle";
+import Navbar from "@/app/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,14 +50,14 @@ export default function RootLayout({
           Skip to content
         </a>
         <div className="min-h-screen flex flex-col">
-          <header className="w-full px-4 sm:px-6 py-4 flex items-center justify-end">
-            <ThemeToggle />
+          <header className="w-full">
+            <Navbar />
           </header>
-          <main id="main-content" className="flex-1 flex items-center justify-center px-6">
+          <main id="main-content" className="flex-1 px-4 sm:px-6 py-8">
             {children}
           </main>
-          <footer className="w-full py-4 text-center text-sm text-[var(--text-secondary)]">
-            © {new Date().getFullYear()} traff-29
+          <footer className="w-full py-6 text-center text-sm text-[var(--text-secondary)]">
+            © {new Date().getFullYear()} traff-29 — built for awareness, not navigation
           </footer>
         </div>
       </body>

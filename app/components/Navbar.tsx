@@ -47,9 +47,8 @@ export default function Navbar() {
         <div className="md:hidden border-t border-black/10 dark:border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-3">
             <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/">Home</Link>
+            <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/simulate">Simulate</Link>
             <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/about">About</Link>
-            <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/data-limits">Data & Limits</Link>
-            <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/contact">Contact</Link>
           </div>
         </div>
       )}
@@ -61,9 +60,8 @@ function NavLinks() {
   return (
     <div className="flex items-center gap-6 text-sm">
       <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/">Home</Link>
+      <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/simulate">Simulate</Link>
       <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/about">About</Link>
-      <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/data-limits">Data & Limits</Link>
-      <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/contact">Contact</Link>
     </div>
   );
 }

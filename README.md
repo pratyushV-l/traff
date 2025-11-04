@@ -1,24 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+traff-29 — an AI-powered traffic awareness app designed for Bengaluru, focusing on modelling, visualising, and communicating the patterns behind congestion.
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies and run the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Key routes:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/` — Home (overview and CTAs)
+- `/simulate` — Interactive simulation (time/density/mode → SEEP placeholders, explanation, reflection, snapshot)
+- `/about` — Criterion A — Learning goal & interest
+
+Optional configuration:
+
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` — when set, you can integrate a live map for the simulation canvas.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to load [Geist](https://vercel.com/font).
 
 ## Learn More
 
