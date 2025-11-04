@@ -3,7 +3,7 @@ export const metadata = { title: "About | traff-29" };
 export default function AboutPage() {
   return (
     <section className="mx-auto max-w-3xl px-6 py-10">
-      <h1 className="text-3xl font-bold text-[var(--foreground)]">Criterion A — Learning Goal & Interest</h1>
+      <h1 className="text-3xl font-bold text-[var(--foreground)]">About this Project:</h1>
       <p className="mt-4 leading-7 text-[var(--text-secondary)]">
         As a Bengaluru resident, daily commutes across one of the world’s most congested road
         networks take over an hour and a half in the morning and nearly two in the evening—even for
