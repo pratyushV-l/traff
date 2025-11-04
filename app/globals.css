@@ -71,11 +71,39 @@ body {
 }
 .flow-fast { animation-duration: 4.5s; }
 .flow-slower { animation-duration: 7.5s; }
+.flow-very-slow { animation-duration: 10s; }
+/* Additional staggered speeds for chaos variant */
+.flow-stagger1 { animation-duration: 5.7s; }
+.flow-stagger2 { animation-duration: 6.3s; }
+.flow-stagger3 { animation-duration: 8.4s; }
+
+/* Dash variants */
+.dash-tight { stroke-dasharray: 12 12; }
+.dash-loose { stroke-dasharray: 28 14; }
+
+/* Subtle vertical jitter for chaos */
+@keyframes jitterY {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-2px); }
+  50% { transform: translateY(2px); }
+  75% { transform: translateY(-1px); }
+}
+.jitter { animation: jitterY 1.8s ease-in-out infinite, flowDash 6s linear infinite; }
+.jitter-slow { animation: jitterY 2.4s ease-in-out infinite, flowDash 6.6s linear infinite; }
+.jitter-fast { animation: jitterY 1.2s ease-in-out infinite, flowDash 5.2s linear infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .flow-line,
   .flow-fast,
   .flow-slower {
+    animation: none !important;
+  }
+  .flow-stagger1,
+  .flow-stagger2,
+  .flow-stagger3,
+  .jitter,
+  .jitter-slow,
+  .jitter-fast {
     animation: none !important;
   }
 }

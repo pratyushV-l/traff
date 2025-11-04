@@ -5,9 +5,9 @@ export default function Home() {
   return (
     <section className="w-full">
       <div className="mx-auto max-w-6xl text-center py-10 sm:py-16">
-        {/* Full-bleed animated lines above title */}
+        {/* Full-bleed chaotic lines above title */}
         <div className="full-bleed mb-6 pointer-events-none select-none" aria-hidden>
-          <RoadAnimation />
+          <RoadAnimation variant="chaos" />
         </div>
 
         <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-[var(--foreground)]">
@@ -17,9 +17,9 @@ export default function Home() {
           turning chaos into motion
         </p>
 
-        {/* Full-bleed animated lines below title */}
+        {/* Full-bleed smooth lines below title */}
         <div className="full-bleed mt-6 pointer-events-none select-none" aria-hidden>
-          <RoadAnimation />
+          <RoadAnimation variant="smooth" />
         </div>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
