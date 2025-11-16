@@ -53,7 +53,7 @@ export default function RootLayout({
           <header className="w-full">
             <Navbar />
           </header>
-          <main id="main-content" className="flex-1 px-4 sm:px-6 py-8">
+          <main id="main-content" className="flex-1 px-4 sm:px-6 flex flex-col">
             {children}
           </main>
           <footer className="w-full py-6 text-center text-sm text-[var(--text-secondary)]">
