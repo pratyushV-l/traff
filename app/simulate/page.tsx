@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 
+import RouteMap from "@/app/components/RouteMap";
+
 type TimeOfDayOption = "morning" | "afternoon" | "evening" | "night";
 type ModeOption = "car" | "two-wheeler" | "public" | "ride-share" | "walking";
 type PriorityOption = "time" | "stress" | "cost" | "environment" | "none";
@@ -212,6 +214,353 @@ const initialState: SurveyState = {
   frequency: "",
 };
 
+type WrappedCategory = "social" | "economic" | "environmental" | "personal";
+
+type WrappedStat = {
+  id: string;
+  category: WrappedCategory;
+  text: string;
+};
+
+type CongestionInsights = {
+  wastedPerTrip: number;
+  wastedDaily: number;
+  wastedWeekly: number;
+  wastedYearly: number;
+  freeFlowMinutes: number;
+  tripsPerWeek: number;
+  annualTrips: number;
+  wrapped: WrappedStat[];
+};
+
+const WORKDAY_HOURS = 8;
+const COMMUNITY_SESSION_MINUTES = 90;
+const CO2_PER_LITRE = 2.31; // kg of CO2 per litre of petrol burned
+
+function buildInsights(answers: SurveyState): CongestionInsights {
+  const tripsPerWeek = getTripsPerWeek(answers.frequency);
+  const annualTrips = Math.max(1, Math.round(tripsPerWeek * 52));
+  const congestionFactor = getCongestionFactor(answers);
+
+  const freeFlowMultiplier = 1 - congestionFactor * 0.65;
+  const freeFlowMinutes = Math.max(5, Math.round(answers.duration * freeFlowMultiplier));
+  const wastedPerTrip = Math.max(2, Math.round(answers.duration - freeFlowMinutes));
+
+  const wastedWeekly = wastedPerTrip * tripsPerWeek;
+  const wastedDaily = tripsPerWeek ? wastedWeekly / 7 : wastedPerTrip;
+  const wastedYearly = wastedWeekly * 52;
+
+  const averageSpeed = getAverageSpeed(answers.mode);
+  const distancePerTrip = Math.max(3, (answers.duration / 60) * averageSpeed);
+  const annualDistance = distancePerTrip * annualTrips;
+  const shiftSavingsLitres = tripsPerWeek
+    ? estimateFuelLitres(answers.mode, distancePerTrip * 52)
+    : 0;
+  const annualFuelLitres = estimateFuelLitres(answers.mode, annualDistance);
+  const wastedYearlyHours = wastedYearly / 60;
+  const lostWorkdays = wastedYearlyHours / WORKDAY_HOURS;
+  const weeklyDelayHours = wastedWeekly / 60;
+  const weeklyCatchUps = COMMUNITY_SESSION_MINUTES ? wastedWeekly / COMMUNITY_SESSION_MINUTES : 0;
+  const delayShare = answers.duration ? wastedPerTrip / answers.duration : 0;
+  const annualTailpipeKg = annualFuelLitres * CO2_PER_LITRE;
+  const annualTailpipeTonnes = annualTailpipeKg / 1000;
+
+  const fuelStatText =
+    annualFuelLitres > 0.5
+      ? `This pattern consumes about ${formatDecimal(annualFuelLitres, 1)} litres of fuel yearly; skipping one trip each week would save roughly ${formatDecimal(shiftSavingsLitres, 1)} litres.`
+      : `No direct personal vehicle fuel use is estimated for your chosen mode across roughly ${formatKilometers(annualDistance)} travelled.`;
+
+  const wrapped: WrappedStat[] = [];
+
+  wrapped.push({
+    id: "trip-volume",
+    category: "personal",
+    text: `Around ${formatNumber(annualTrips)} peak-hour trips this year (~${formatNumber(
+      tripsPerWeek
+    )} per week).`,
+  });
+
+  wrapped.push({
+    id: "delay-share",
+    category: "personal",
+    text: `Each trip loses about ${formatDuration(wastedPerTrip)}, which is ${formatPercentage(
+      delayShare
+    )} of the total commute you reported.`,
+  });
+
+  wrapped.push({
+    id: "social-time",
+    category: "social",
+    text: `Weekly congestion delay totals ${formatDecimal(weeklyDelayHours, 1)} hours—roughly ${formatDecimal(
+      weeklyCatchUps,
+      1
+    )} typical 90-minute meetups you could plan elsewhere.`,
+  });
+
+  wrapped.push({
+    id: "workdays",
+    category: "social",
+    text: `Over the year that delay sums to ${formatDecimal(
+      wastedYearlyHours,
+      1
+    )} hours, close to ${formatDecimal(lostWorkdays, 1)} standard workdays of time.`,
+  });
+
+  wrapped.push({
+    id: "distance",
+    category: "economic",
+    text: `Your route covers about ${formatKilometers(distancePerTrip)} per trip and ${formatKilometers(
+      annualDistance
+    )} annually—useful for tracking passes, maintenance, or reimbursements.`,
+  });
+
+  wrapped.push({
+    id: "fuel",
+    category: "economic",
+    text: fuelStatText,
+  });
+
+  if (annualTailpipeKg > 0.5) {
+    wrapped.push({
+      id: "emissions",
+      category: "environmental",
+      text: `Tailpipe emissions from this pattern are roughly ${formatDecimal(
+        annualTailpipeKg,
+        0
+      )} kg CO₂ (${formatDecimal(annualTailpipeTonnes, 2)} tonnes) each year.`,
+    });
+  } else {
+    wrapped.push({
+      id: "emissions",
+      category: "environmental",
+      text: `Direct tailpipe CO₂ is near zero for the mode and distance you selected; upstream power impacts depend on the transit network.`,
+    });
+  }
+
+  return {
+    wastedPerTrip,
+    wastedDaily,
+    wastedWeekly,
+    wastedYearly,
+    freeFlowMinutes,
+    tripsPerWeek,
+    annualTrips,
+    wrapped,
+  };
+}
+
+function getTripsPerWeek(frequency: FrequencyOption | ""): number {
+  switch (frequency) {
+    case "daily":
+      return 10;
+    case "few-times":
+      return 6;
+    case "weekly":
+      return 2;
+    case "occasionally":
+      return 1;
+    default:
+      return 6;
+  }
+}
+
+function getCongestionFactor(answers: SurveyState): number {
+  let factor = 0.24;
+
+  switch (answers.timeOfDay) {
+    case "morning":
+      factor += 0.1;
+      break;
+    case "evening":
+      factor += 0.12;
+      break;
+    case "afternoon":
+      factor += 0.05;
+      break;
+    case "night":
+      factor += 0.01;
+      break;
+    default:
+      factor += 0.03;
+      break;
+  }
+
+  switch (answers.mode) {
+    case "car":
+      factor += 0.06;
+      break;
+    case "ride-share":
+      factor += 0.05;
+      break;
+    case "two-wheeler":
+      factor += 0.03;
+      break;
+    case "public":
+      factor += 0.04;
+      break;
+    case "walking":
+      factor -= 0.12;
+      break;
+    default:
+      factor += 0.02;
+      break;
+  }
+
+  const city = answers.city.toLowerCase();
+  if (city.includes("bengaluru") || city.includes("bangalore")) {
+    factor += 0.12;
+  } else if (city.includes("mumbai")) {
+    factor += 0.1;
+  } else if (city.includes("delhi")) {
+    factor += 0.11;
+  } else if (city.includes("hyderabad") || city.includes("chennai")) {
+    factor += 0.07;
+  } else if (city.includes("pune") || city.includes("kolkata")) {
+    factor += 0.06;
+  } else if (city.trim().length) {
+    factor += 0.05;
+  }
+
+  if (answers.frequency === "occasionally") {
+    factor -= 0.03;
+  }
+
+  return clamp(0.08, 0.6, factor);
+}
+
+function getAverageSpeed(mode: ModeOption | ""): number {
+  switch (mode) {
+    case "car":
+      return 22;
+    case "ride-share":
+      return 20;
+    case "two-wheeler":
+      return 28;
+    case "public":
+      return 18;
+    case "walking":
+      return 5;
+    default:
+      return 21;
+  }
+}
+
+function clamp(min: number, max: number, value: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function formatDuration(totalMinutes: number): string {
+  const safeMinutes = Math.max(0, Math.round(totalMinutes));
+  const hours = Math.floor(safeMinutes / 60);
+  const minutes = safeMinutes % 60;
+  if (hours && minutes) {
+    return `${hours} hr ${minutes} min`;
+  }
+  if (hours) {
+    return `${hours} hr`;
+  }
+  return `${minutes} min`;
+}
+
+function formatNumber(value: number): string {
+  const formatter = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
+  return formatter.format(Math.round(value));
+}
+
+function formatDecimal(value: number, fractionDigits = 1): string {
+  const formatter = new Intl.NumberFormat(undefined, {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  });
+  const safeValue = Number.isFinite(value) ? value : 0;
+  return formatter.format(safeValue);
+}
+
+function formatKilometers(distanceKm: number, fractionDigits = 1): string {
+  const safeDistance = Math.max(0, distanceKm);
+  return `${formatDecimal(safeDistance, fractionDigits)} km`;
+}
+
+function formatPercentage(value: number, fractionDigits = 1): string {
+  const safeValue = Number.isFinite(value) ? value : 0;
+  return `${formatDecimal(safeValue * 100, fractionDigits)}%`;
+}
+
+function estimateFuelLitres(mode: ModeOption | "", distanceKm: number): number {
+  const km = Math.max(0, distanceKm);
+  let efficiency: number | null = null;
+
+  switch (mode) {
+    case "car":
+      efficiency = 12;
+      break;
+    case "ride-share":
+      efficiency = 13;
+      break;
+    case "two-wheeler":
+      efficiency = 32;
+      break;
+    case "public":
+    case "walking":
+      efficiency = null;
+      break;
+    default:
+      efficiency = 15;
+      break;
+  }
+
+  if (!efficiency) {
+    return 0;
+  }
+
+  return km / efficiency;
+}
+
+type WrappedCategoryBlock = {
+  category: WrappedCategory;
+  label: string;
+  entries: WrappedStat[];
+};
+
+function getWrappedByCategory(stats: WrappedStat[]): WrappedCategoryBlock[] {
+  const categoryOrder: WrappedCategory[] = ["personal", "social", "economic", "environmental"];
+  const categoryLabels: Record<WrappedCategory, string> = {
+    personal: "Personal Pace",
+    social: "Social Bandwidth",
+    economic: "Economic Footprint",
+    environmental: "Environmental Impact",
+  };
+
+  return categoryOrder
+    .map((category) => ({
+      category,
+      label: categoryLabels[category],
+      entries: stats.filter((stat) => stat.category === category),
+    }))
+    .filter((block) => block.entries.length > 0);
+}
+
+type ResultStatProps = {
+  label: string;
+  value: string;
+  emphasis?: boolean;
+};
+
+function ResultStat({ label, value, emphasis }: ResultStatProps) {
+  return (
+    <div
+      className={`rounded-2xl border border-black/10 px-5 py-4 text-center dark:border-white/10 ${
+        emphasis ? "bg-[var(--primary)]/16" : "bg-[var(--background)]/70"
+      }`}
+    >
+      <span className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
+        {label}
+      </span>
+      <span className="mt-2 block text-xl font-semibold text-[var(--foreground)]">{value}</span>
+    </div>
+  );
+}
+
 // Ordered list of questions to drive the minimalist survey flow.
 const steps: StepConfig[] = [
   {
@@ -316,6 +665,7 @@ export default function SimulatePage() {
   };
 
   if (completed) {
+    const insights = buildInsights(answers);
     const summaryItems: { label: string; value: string }[] = [
       { label: "City", value: answers.city || "-" },
       { label: "Start location", value: answers.startLocation || "-" },
@@ -341,12 +691,12 @@ export default function SimulatePage() {
 
     return (
       <section className="flex-1 flex items-center justify-center py-12">
-        <div className="w-full max-w-md rounded-3xl border border-black/10 bg-[var(--card)]/80 p-10 text-center shadow-sm dark:border-white/10">
-          <h1 className="text-2xl font-semibold text-[var(--foreground)]">Thanks for sharing.</h1>
-          <p className="mt-3 text-sm text-[var(--text-secondary)]">
-            We will use this snapshot to tailor the simulation experience for you.
+        <div className="w-full max-w-3xl rounded-3xl border border-black/10 bg-[var(--card)]/85 px-10 py-12 shadow-sm dark:border-white/10">
+          <h1 className="text-3xl font-semibold text-[var(--foreground)] text-center">Snapshot locked.</h1>
+          <p className="mt-3 text-sm text-[var(--text-secondary)] text-center">
+            Here is the quick-form summary that feeds your simulation plus a glimpse of what congestion has been doing behind the scenes.
           </p>
-          <ul className="mt-6 space-y-4 text-left text-sm">
+          <ul className="mt-8 grid gap-5 text-sm sm:grid-cols-2">
             {summaryItems.map((item) => (
               <li key={item.label}>
                 <span className="block text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
@@ -356,6 +706,60 @@ export default function SimulatePage() {
               </li>
             ))}
           </ul>
+
+          {answers.startLocation && answers.endLocation && (
+            <div className="mt-10">
+              <h2 className="text-lg font-semibold text-[var(--foreground)] text-center">Route Snapshot</h2>
+              <p className="mt-2 text-sm text-[var(--text-secondary)] text-center">
+                Open data map with estimated route and slower segments in red.
+              </p>
+              <RouteMap
+                startLocation={answers.startLocation}
+                endLocation={answers.endLocation}
+                mode={answers.mode || "driving"}
+                className="mt-4"
+              />
+            </div>
+          )}
+
+          <div className="mt-10 rounded-2xl bg-[var(--primary)]/12 px-6 py-5 text-sm text-[var(--foreground)]">
+            <p>
+              Your typical commute takes <strong>{formatDuration(answers.duration)}</strong> while the streets could clear it in about <strong>{formatDuration(insights.freeFlowMinutes)}</strong>. That leaves <strong>{formatDuration(insights.wastedPerTrip)}</strong> eaten by delays every trip.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <ResultStat label="Lost daily" value={formatDuration(insights.wastedDaily)} />
+            <ResultStat label="Lost weekly" value={formatDuration(insights.wastedWeekly)} />
+            <ResultStat label="Lost yearly" value={formatDuration(insights.wastedYearly)} emphasis />
+          </div>
+
+          <div className="mt-10">
+            <h2 className="text-lg font-semibold text-[var(--foreground)] text-center">Commute Wrapped</h2>
+            <p className="mt-2 text-sm text-[var(--text-secondary)] text-center">
+              A domain-by-domain snapshot based on your inputs and our calculations.
+            </p>
+            <div className="mt-6 grid gap-5 text-sm">
+              {getWrappedByCategory(insights.wrapped).map(({ category, label, entries }) => (
+                <div
+                  key={category}
+                  className="rounded-2xl border border-black/10 bg-[var(--background)]/65 px-5 py-4 shadow-sm dark:border-white/10"
+                >
+                  <h3 className="text-sm font-semibold text-[var(--foreground)] uppercase tracking-wide">
+                    {label}
+                  </h3>
+                  <ul className="mt-3 space-y-3">
+                    {entries.map((entry) => (
+                      <li key={entry.id} className="text-[var(--foreground)]/95">
+                        {entry.text}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={handleRestart}
