@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   /* Light palette */
   --background: #F9FAFB; /* Background / Surface */
   --foreground: #1F2937; /* Neutral / Text Primary */
@@ -10,6 +11,14 @@
   --text-secondary: #6B7280; /* Neutral / Text Secondary */
   --success: #10b07f; /* Success / Green */
   --warning: #fcb730; /* Warning / Yellow */
+  --input-surface: #f4f7ff;
+  --input-border: #c8d7ff;
+  --input-placeholder: rgba(80, 102, 144, 0.65);
+  --input-shadow: 0 10px 28px rgba(67, 107, 172, 0.12);
+  --input-focus-ring: rgba(15, 144, 160, 0.24);
+  --dropdown-border: #c8d7ff;
+  --dropdown-surface: #ffffff;
+  --dropdown-shadow: 0 18px 38px rgba(50, 76, 126, 0.18);
 }
 
 /* Using CSS variables directly with Tailwind arbitrary values (e.g., bg-[var(--primary)]).
@@ -31,6 +40,7 @@
 
 /* Manual override via class on <html> added by ThemeToggle */
 .dark {
+  color-scheme: dark;
   --background: #0E1116;
   --foreground: #F3F4F6;
   --card: #1A1D23;
@@ -39,6 +49,14 @@
   --text-secondary: #9CA3AF;
   --success: #1fd49a;
   --warning: #ffd166;
+  --input-surface: rgba(36, 40, 51, 0.9);
+  --input-border: rgba(156, 163, 175, 0.38);
+  --input-placeholder: rgba(156, 163, 175, 0.65);
+  --input-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+  --input-focus-ring: rgba(32, 195, 210, 0.32);
+  --dropdown-border: rgba(148, 163, 184, 0.35);
+  --dropdown-surface: rgba(26, 29, 35, 0.96);
+  --dropdown-shadow: 0 22px 44px rgba(0, 0, 0, 0.55);
 }
 .light {
   --background: #F9FAFB;
@@ -49,6 +67,14 @@
   --text-secondary: #6B7280;
   --success: #10b07f;
   --warning: #fcb730;
+  --input-surface: #f4f7ff;
+  --input-border: #c8d7ff;
+  --input-placeholder: rgba(80, 102, 144, 0.65);
+  --input-shadow: 0 10px 28px rgba(67, 107, 172, 0.12);
+  --input-focus-ring: rgba(15, 144, 160, 0.24);
+  --dropdown-border: #c8d7ff;
+  --dropdown-surface: #ffffff;
+  --dropdown-shadow: 0 18px 38px rgba(50, 76, 126, 0.18);
 }
 
 body {
@@ -56,6 +82,37 @@ body {
   color: var(--foreground);
   /* Inherit font from Next Font on <body> to avoid clobbering */
   font-family: inherit;
+}
+
+.input-shell {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid var(--input-border);
+  background: var(--input-surface);
+  box-shadow: var(--input-shadow);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--foreground);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.input-shell::placeholder {
+  color: var(--input-placeholder);
+}
+
+.input-shell:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.dropdown-panel {
+  border-radius: 1rem;
+  border: 1px solid var(--dropdown-border);
+  background: var(--dropdown-surface);
+  box-shadow: var(--dropdown-shadow);
+  overflow: hidden;
 }
 
 /* --- Road animation helpers --- */
