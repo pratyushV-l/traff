@@ -49,7 +49,7 @@ export default function SimulatePage() {
         </div>
 
         {/* Right: Controls + SEEP */}
-        <div className="rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-4">
+  <div className="rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-4">
           <h2 className="font-semibold">Controls</h2>
           <div className="mt-3 grid gap-4">
             <label className="grid gap-2">
@@ -89,7 +89,7 @@ export default function SimulatePage() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded border border-black/10 dark:border-white/10 p-3 bg-white/50 dark:bg-white/5">
+  <div className="rounded border border-black/10 dark:border-white/10 p-3 bg-white/50 dark:bg-white/5">
       <div className="text-[var(--text-secondary)] text-xs">{label}</div>
       <div className="font-semibold">{value}</div>
     </div>
@@ -100,7 +100,7 @@ function ReflectionButton() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button onClick={() => setOpen(true)} className="px-3 py-1.5 rounded-md border border-black/10 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10 text-sm">
+  <button onClick={() => setOpen(true)} className="px-3 py-1.5 rounded-md border border-black/10 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10 text-sm">
         Reflect
       </button>
       {open && (
@@ -146,7 +146,7 @@ function SnapshotButton({ targetId }: { targetId: string }) {
   };
 
   return (
-    <button onClick={onSnap} disabled={saving} className="px-3 py-1.5 rounded-md border border-black/10 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10 text-sm disabled:opacity-60">
+  <button onClick={onSnap} disabled={saving} className="px-3 py-1.5 rounded-md border border-black/10 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10 text-sm disabled:opacity-60">
       {saving ? "Saving…" : "Share snapshot"}
     </button>
   );

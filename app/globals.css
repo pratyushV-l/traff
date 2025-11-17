@@ -5,11 +5,11 @@
   --background: #F9FAFB; /* Background / Surface */
   --foreground: #1F2937; /* Neutral / Text Primary */
   --card: #FFFFFF; /* Card / Secondary Surface */
-  --primary: #1C6E8C; /* Primary Accent */
-  --secondary: #E63946; /* Secondary Accent */
+  --primary: #0f90a0; /* Primary Accent */
+  --secondary: #f95954; /* Secondary Accent */
   --text-secondary: #6B7280; /* Neutral / Text Secondary */
-  --success: #00B37E; /* Success / Green */
-  --warning: #FACC15; /* Warning / Yellow */
+  --success: #10b07f; /* Success / Green */
+  --warning: #fcb730; /* Warning / Yellow */
 }
 
 /* Using CSS variables directly with Tailwind arbitrary values (e.g., bg-[var(--primary)]).
@@ -21,11 +21,11 @@
     --background: #0E1116;
     --foreground: #F3F4F6;
     --card: #1A1D23;
-    --primary: #58A6FF;
-    --secondary: #FF6B6B;
+    --primary: #20c3d2;
+    --secondary: #ff7a70;
     --text-secondary: #9CA3AF;
-    --success: #32D296;
-    --warning: #FCD34D;
+    --success: #1fd49a;
+    --warning: #ffd166;
   }
 }
 
@@ -34,21 +34,21 @@
   --background: #0E1116;
   --foreground: #F3F4F6;
   --card: #1A1D23;
-  --primary: #58A6FF;
-  --secondary: #FF6B6B;
+  --primary: #20c3d2;
+  --secondary: #ff7a70;
   --text-secondary: #9CA3AF;
-  --success: #32D296;
-  --warning: #FCD34D;
+  --success: #1fd49a;
+  --warning: #ffd166;
 }
 .light {
   --background: #F9FAFB;
   --foreground: #1F2937;
   --card: #FFFFFF;
-  --primary: #1C6E8C;
-  --secondary: #E63946;
+  --primary: #0f90a0;
+  --secondary: #f95954;
   --text-secondary: #6B7280;
-  --success: #00B37E;
-  --warning: #FACC15;
+  --success: #10b07f;
+  --warning: #fcb730;
 }
 
 body {

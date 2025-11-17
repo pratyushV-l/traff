@@ -37,7 +37,7 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={theme === "dark"}
-      className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors border-black/10 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10"
+  className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors border-black/10 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10"
     >
       <span className="inline-block" aria-hidden suppressHydrationWarning>
         {theme === "dark" ? (

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Logo from "@/app/components/Logo";
 import ThemeToggle from "@/app/components/ThemeToggle";
 
 export default function Navbar() {
@@ -11,8 +12,13 @@ export default function Navbar() {
     <nav className="w-full border-b border-black/10 dark:border-white/10 bg-[var(--background)]/80 backdrop-blur supports-[backdrop-filter]:bg-[var(--background)]/70">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/" className="text-lg font-semibold tracking-tight text-[var(--foreground)] hover:opacity-90">
-            traff-29
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-lg font-semibold tracking-tight text-[var(--foreground)] hover:opacity-90"
+            aria-label="Traff 29 home"
+          >
+            <Logo />
+            <span>traff-29</span>
           </Link>
         </div>
 

@@ -44,7 +44,7 @@ export default function Home() {
 
 function FeatureCard({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
+  <div className="rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
       <h3 className="font-semibold text-[var(--foreground)]">{title}</h3>
       <p className="mt-2 text-sm text-[var(--text-secondary)]">{body}</p>
     </div>

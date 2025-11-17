@@ -18,7 +18,7 @@ export default function AboutPage() {
         large-scale social challenge. Here, I’ll use AI not as a direct solution to traffic but as
         a vehicle for awareness and mindset change.
       </p>
-      <div className="mt-6 rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
+  <div className="mt-6 rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
         <h2 className="font-semibold text-[var(--foreground)]">Learning Goal</h2>
         <p className="mt-2 text-[var(--text-secondary)]">
           Apply AI—data analysis, NLP, and rule-based models—to model and visualise urban traffic
@@ -30,14 +30,14 @@ export default function AboutPage() {
           <li>Design a responsive UI that turns complex data into engaging, shareable narratives.</li>
         </ul>
       </div>
-      <div className="mt-6 rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
+  <div className="mt-6 rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
         <h2 className="font-semibold text-[var(--foreground)]">Why AI?</h2>
         <p className="mt-2 text-[var(--text-secondary)]">
           AI exposes hidden relationships that static campaigns miss. It lets people see and
           interact with dynamics—bridging technical data and human understanding.
         </p>
       </div>
-      <div className="mt-6 rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
+  <div className="mt-6 rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
         <h2 className="font-semibold text-[var(--foreground)]">Outcomes</h2>
         <ul className="mt-2 list-disc pl-5 text-[var(--text-secondary)]">
           <li>Explain how AI simulates and analyses real-world traffic.</li>
