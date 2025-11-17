@@ -191,6 +191,13 @@ body {
   }
 }
 
+.loading-nav-hidden header,
+html.loading-nav-hidden header {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fade-pane {
     transition: none;

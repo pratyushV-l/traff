@@ -24,6 +24,24 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const className = "loading-nav-hidden";
+    const root = document.documentElement;
+    const body = document.body;
+    if (isFading) {
+      root.classList.add(className);
+      body.classList.add(className);
+    } else {
+      root.classList.remove(className);
+      body.classList.remove(className);
+    }
+    return () => {
+      root.classList.remove(className);
+      body.classList.remove(className);
+    };
+  }, [isFading]);
+
   const schedule = (callback: () => void, delay: number) => {
     const id = window.setTimeout(() => {
       timeouts.current = timeouts.current.filter((stored) => stored !== id);
