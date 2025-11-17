@@ -1,14 +1,19 @@
 import Image from "next/image";
 
-export default function Logo() {
+type LogoProps = {
+	size?: number;
+	className?: string;
+};
+
+export default function Logo({ size = 40, className }: LogoProps) {
 	return (
 		<Image
 			src="/logo-png.png"
 			alt="Traff 29 logo"
-			width={40}
-			height={40}
+			width={size}
+			height={size}
 			priority
-			className="h-10 w-10"
+			className={className ?? "h-10 w-10"}
 		/>
 	);
 }

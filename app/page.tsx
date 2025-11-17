@@ -1,37 +1,101 @@
-import Link from "next/link";
+﻿"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import RoadAnimation from "@/app/components/RoadAnimation";
+import Logo from "@/app/components/Logo";
+
+const NAVIGATE_DELAY = 1700;
 
 export default function Home() {
+  const router = useRouter();
+  const [isFading, setIsFading] = useState(false);
+  const timeouts = useRef<number[]>([]);
+
+  useEffect(() => {
+    router.prefetch?.("/simulate");
+  }, [router]);
+
+  useEffect(() => {
+    return () => {
+      timeouts.current.forEach((id) => window.clearTimeout(id));
+      timeouts.current = [];
+    };
+  }, []);
+
+  const schedule = (callback: () => void, delay: number) => {
+    const id = window.setTimeout(() => {
+      timeouts.current = timeouts.current.filter((stored) => stored !== id);
+      callback();
+    }, delay);
+    timeouts.current.push(id);
+  };
+
+  const handleStart = () => {
+    if (isFading) return;
+
+    if (typeof window !== "undefined") {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (prefersReducedMotion.matches) {
+        router.push("/simulate");
+        return;
+      }
+    }
+
+    setIsFading(true);
+    schedule(() => router.push("/simulate"), NAVIGATE_DELAY);
+  };
+
   return (
     <section className="w-full flex-1 flex flex-col">
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6">
-        <div className="mx-auto max-w-6xl w-full text-center py-10 sm:py-16">
-          {/* Full-bleed chaotic lines above title */}
-          <div className="full-bleed mb-6 pointer-events-none select-none" aria-hidden>
-            <RoadAnimation variant="chaos" />
-          </div>
+      <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6">
+        <div className={`fade-pane ${isFading ? "fade-pane--out" : ""}`}>
+          <div className="mx-auto max-w-6xl w-full text-center py-10 sm:py-16">
+            <div className="full-bleed mb-6 pointer-events-none select-none" aria-hidden>
+              <RoadAnimation variant="chaos" />
+            </div>
 
-          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-[var(--foreground)]">
-            traff-29
-          </h1>
-          <p className="mt-3 text-lg sm:text-xl text-[var(--text-secondary)]">
-            turning chaos into motion
-          </p>
+            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-[var(--foreground)]">
+              traff-29
+            </h1>
+            <p className="mt-3 text-lg sm:text-xl text-[var(--text-secondary)]">
+              turning chaos into motion
+            </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link href="/simulate" className="px-5 py-2.5 rounded-md bg-[var(--primary)] text-white hover:opacity-90">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={handleStart}
+                disabled={isFading}
+                className="px-5 py-2.5 rounded-md bg-[var(--primary)] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-80"
+              >
                 Start simulation
-              </Link>
-          </div>
+              </button>
+            </div>
 
-          {/* Full-bleed smooth lines below title */}
-          <div className="full-bleed mt-6 pointer-events-none select-none" aria-hidden>
-            <RoadAnimation variant="smooth" />
+            <div className="full-bleed mt-6 pointer-events-none select-none" aria-hidden>
+              <RoadAnimation variant="smooth" />
+            </div>
+          </div>
+        </div>
+
+        <div className={`fade-pane fade-pane--logo ${isFading ? "fade-pane--in" : ""}`} aria-hidden={!isFading}>
+          <span className="sr-only" role="status" aria-live="polite">
+            Transitioning to simulation
+          </span>
+          <div className="logo-orbit" aria-hidden>
+            <span className="logo-orbit__halo" />
+            <span className="logo-orbit__track" />
+            <span className="logo-orbit__track logo-orbit__track--inner" />
+            <div className="logo-orbit__core">
+              <Logo size={56} className="h-14 w-14" />
+            </div>
           </div>
         </div>
       </div>
 
-  <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 pt-12 sm:pt-16 pb-12 sm:pb-16">
+      <div className={`mx-auto w-full max-w-6xl px-4 sm:px-6 pt-12 sm:pt-16 pb-12 sm:pb-16 fade-pane ${isFading ? "fade-pane--out" : ""}`}>
         <div className="grid sm:grid-cols-3 gap-4 text-left">
           <FeatureCard title="Model" body="Adjust time, density, and mode to see flows and SEEP outcomes (commute time, emissions, stress proxies)." />
           <FeatureCard title="Explain" body="AI-written summaries translate patterns into clear stories for broader audiences." />
@@ -44,7 +108,7 @@ export default function Home() {
 
 function FeatureCard({ title, body }: { title: string; body: string }) {
   return (
-  <div className="rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
+    <div className="rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
       <h3 className="font-semibold text-[var(--foreground)]">{title}</h3>
       <p className="mt-2 text-sm text-[var(--text-secondary)]">{body}</p>
     </div>

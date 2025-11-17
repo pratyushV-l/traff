@@ -6,12 +6,14 @@
 
 type Props = {
   variant?: "smooth" | "chaos";
+  className?: string;
 };
 
-export default function RoadAnimation({ variant = "smooth" }: Props) {
+export default function RoadAnimation({ variant = "smooth", className }: Props) {
   const isChaos = variant === "chaos";
+  const wrapperClass = className ? `w-full ${className}` : "w-full";
   return (
-    <div className="w-full" aria-hidden>
+    <div className={wrapperClass} aria-hidden>
       <svg
         className={`block w-full ${isChaos ? "h-[200px] sm:h-[220px]" : "h-[160px] sm:h-[200px]"}`}
         viewBox="0 0 1200 220"
