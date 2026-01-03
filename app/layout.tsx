@@ -49,8 +49,8 @@ export default function RootLayout({
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-[var(--card)] focus:text-[var(--foreground)] focus:px-3 focus:py-2 focus:rounded-md">
           Skip to content
         </a>
-        <div className="min-h-screen flex flex-col">
-          <header className="w-full">
+        <div className="min-h-screen flex flex-col relative">
+          <header className="w-full relative z-50">
             <Navbar />
           </header>
           <main id="main-content" className="flex-1 px-4 sm:px-6 flex flex-col">

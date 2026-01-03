@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "@/app/components/Logo";
-import ThemeToggle from "@/app/components/ThemeToggle";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="w-full border-b border-black/10 dark:border-white/10 bg-[var(--background)]/80 backdrop-blur supports-[backdrop-filter]:bg-[var(--background)]/70">
+    <nav className="w-full border-b border-white/10 bg-[var(--background)]/80 backdrop-blur supports-[backdrop-filter]:bg-[var(--background)]/70">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link
@@ -24,18 +23,16 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-6">
           <NavLinks />
-          <ThemeToggle />
         </div>
 
         {/* Mobile controls */}
         <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle />
           <button
             type="button"
             aria-label="Toggle navigation menu"
             aria-expanded={open}
             onClick={() => setOpen(v => !v)}
-            className="inline-flex items-center justify-center rounded-md p-2 hover:bg-black/5 dark:hover:bg-white/10"
+            className="inline-flex items-center justify-center rounded-md p-2 hover:bg-white/10"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               {open ? (
@@ -50,7 +47,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-black/10 dark:border-white/10">
+        <div className="md:hidden border-t border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-3">
             <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/">Home</Link>
             <Link className="text-[var(--foreground)] hover:text-[var(--primary)]" href="/simulate">Simulate</Link>

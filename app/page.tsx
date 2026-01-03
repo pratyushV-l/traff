@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import RoadAnimation from "@/app/components/RoadAnimation";
 import Logo from "@/app/components/Logo";
+import Beams from "@/app/components/Beams";
 
 const NAVIGATE_DELAY = 1700;
 
@@ -66,8 +67,20 @@ export default function Home() {
   };
 
   return (
-    <section className="w-full flex-1 flex flex-col">
-      <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6">
+    <section className="w-full flex-1 flex flex-col overflow-hidden">
+      {/* <div className="absolute inset-0 z-0 pointer-events-none">
+        <Beams
+          beamWidth={2}
+          beamHeight={120}
+          beamNumber={12}
+          lightColor="#ffffff"
+          speed={1}
+          noiseIntensity={2.35}
+          scale={0.2}
+          rotation={45}
+        />
+      </div> */}
+      <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 z-10">
         <div className={`fade-pane ${isFading ? "fade-pane--out" : ""}`}>
           <div className="mx-auto max-w-6xl w-full text-center py-10 sm:py-16">
             <div className="full-bleed mb-6 pointer-events-none select-none" aria-hidden>
@@ -126,7 +139,7 @@ export default function Home() {
 
 function FeatureCard({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-lg border border-black/10 dark:border-white/10 bg-[var(--card)] p-5">
+    <div className="rounded-lg border border-white/10 bg-[var(--card)] p-5">
       <h3 className="font-semibold text-[var(--foreground)]">{title}</h3>
       <p className="mt-2 text-sm text-[var(--text-secondary)]">{body}</p>
     </div>

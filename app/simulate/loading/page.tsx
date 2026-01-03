@@ -59,7 +59,7 @@ export default function SimulationLoadingPage() {
           className={`absolute transition-opacity duration-700 ease-out ${stage === "logo" ? "opacity-100" : "opacity-0"}`}
           aria-hidden={stage !== "logo"}
         >
-          <div className="loading-logo-pulse flex h-28 w-28 items-center justify-center rounded-full border border-black/10 bg-[var(--card)] shadow-[0_22px_44px_-24px_rgba(15,15,30,0.55)] dark:border-white/15">
+          <div className="loading-logo-pulse flex h-28 w-28 items-center justify-center rounded-full border border-white/15 bg-[var(--card)] shadow-[0_22px_44px_-24px_rgba(15,15,30,0.55)]">
             <Logo size={64} className="h-16 w-16" />
           </div>
         </div>

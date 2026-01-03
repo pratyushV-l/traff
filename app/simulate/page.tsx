@@ -549,7 +549,7 @@ type ResultStatProps = {
 function ResultStat({ label, value, emphasis }: ResultStatProps) {
   return (
     <div
-      className={`rounded-2xl border border-black/10 px-5 py-4 text-center dark:border-white/10 ${
+      className={`rounded-2xl border border-white/10 px-5 py-4 text-center ${
         emphasis ? "bg-[var(--primary)]/16" : "bg-[var(--background)]/70"
       }`}
     >
@@ -691,7 +691,7 @@ export default function SimulatePage() {
 
     return (
       <section className="flex-1 flex items-center justify-center py-12">
-        <div className="w-full max-w-3xl rounded-3xl border border-black/10 bg-[var(--card)]/85 px-10 py-12 shadow-sm dark:border-white/10">
+        <div className="w-full max-w-3xl rounded-3xl border border-white/10 bg-[var(--card)]/85 px-10 py-12 shadow-sm">
           <h1 className="text-3xl font-semibold text-[var(--foreground)] text-center">Snapshot locked.</h1>
           <p className="mt-3 text-sm text-[var(--text-secondary)] text-center">
             Here is the quick-form summary that feeds your simulation plus a glimpse of what congestion has been doing behind the scenes.
@@ -743,7 +743,7 @@ export default function SimulatePage() {
               {getWrappedByCategory(insights.wrapped).map(({ category, label, entries }) => (
                 <div
                   key={category}
-                  className="rounded-2xl border border-black/10 bg-[var(--background)]/65 px-5 py-4 shadow-sm dark:border-white/10"
+                  className="rounded-2xl border border-white/10 bg-[var(--background)]/65 px-5 py-4 shadow-sm"
                 >
                   <h3 className="text-sm font-semibold text-[var(--foreground)] uppercase tracking-wide">
                     {label}
@@ -763,7 +763,7 @@ export default function SimulatePage() {
           <button
             type="button"
             onClick={handleRestart}
-            className="mt-8 inline-flex items-center justify-center rounded-full border border-black/20 px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+            className="mt-8 inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-white/10"
           >
             Start again
           </button>
@@ -778,12 +778,12 @@ export default function SimulatePage() {
   return (
     <section className="flex-1 flex items-center justify-center py-12">
       <form onSubmit={handleSubmit} className="w-full max-w-xl">
-        <div className="mx-auto max-w-md rounded-3xl border border-black/10 bg-[var(--card)]/80 px-8 py-10 shadow-sm backdrop-blur dark:border-white/10">
+        <div className="mx-auto max-w-md rounded-3xl border border-white/10 bg-[var(--card)]/80 px-8 py-10 shadow-sm backdrop-blur">
           <div>
             <div className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
               Step {stepIndex + 1} of {steps.length}
             </div>
-            <div className="mt-3 h-1 w-full rounded-full bg-black/10 dark:bg-white/10">
+            <div className="mt-3 h-1 w-full rounded-full bg-white/10">
               <div
                 className="h-full rounded-full bg-[var(--primary)] transition-all"
                 style={{ width: `${progress}%` }}
@@ -799,7 +799,7 @@ export default function SimulatePage() {
               type="button"
               onClick={handleBack}
               disabled={stepIndex === 0}
-              className="rounded-full border border-black/20 px-4 py-2 text-sm text-[var(--text-secondary)] transition disabled:opacity-40 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+              className="rounded-full border border-white/20 px-4 py-2 text-sm text-[var(--text-secondary)] transition disabled:opacity-40 hover:bg-white/10"
             >
               Back
             </button>
@@ -1002,7 +1002,7 @@ function CitySearchInput({ label, placeholder, value, onChange }: CitySearchInpu
                   type="button"
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => handleSuggestionSelect(suggestion)}
-                  className="flex w-full flex-col items-start gap-0.5 px-4 py-3 text-left text-sm hover:bg-black/5 dark:hover:bg-white/10"
+                  className="flex w-full flex-col items-start gap-0.5 px-4 py-3 text-left text-sm hover:bg-white/10"
                 >
                   <span className="font-medium text-[var(--foreground)]">{suggestion.primary}</span>
                   {suggestion.secondary && (
@@ -1217,7 +1217,7 @@ function LocationSearchInput({ label, placeholder, value, onChange }: LocationSe
                   type="button"
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => handleSuggestionSelect(suggestion)}
-                  className="flex w-full flex-col items-start gap-0.5 px-4 py-3 text-left text-sm hover:bg-black/5 dark:hover:bg-white/10"
+                  className="flex w-full flex-col items-start gap-0.5 px-4 py-3 text-left text-sm hover:bg-white/10"
                 >
                   <span className="font-medium text-[var(--foreground)]">{suggestion.primary}</span>
                   {suggestion.secondary && (
@@ -1246,7 +1246,7 @@ function TimeQuestion({ answers, onAnswer }: StepRenderProps) {
             className={`flex cursor-pointer items-center justify-between rounded-2xl border px-4 py-3 text-sm transition ${
               isSelected
                 ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                : "border-black/10 dark:border-white/15 hover:border-[var(--primary)]/60"
+                : "border-white/15 hover:border-[var(--primary)]/60"
             }`}
           >
             <div>
@@ -1282,12 +1282,12 @@ function ModeQuestion({ answers, onAnswer }: StepRenderProps) {
             className={`flex flex-col items-center gap-3 rounded-2xl border px-4 py-4 text-sm transition ${
               isActive
                 ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                : "border-black/10 dark:border-white/15 hover:border-[var(--primary)]/60"
+                : "border-white/15 hover:border-[var(--primary)]/60"
             }`}
           >
             <span
               className={`flex h-12 w-12 items-center justify-center rounded-full border ${
-                isActive ? "border-[var(--primary)] bg-[var(--primary)]/10" : "border-black/10 dark:border-white/15"
+                isActive ? "border-[var(--primary)] bg-[var(--primary)]/10" : "border-white/15"
               }`}
             >
               {option.icon}
@@ -1339,7 +1339,7 @@ function PriorityQuestion({ answers, onAnswer }: StepRenderProps) {
             className={`rounded-full px-5 py-2 text-sm transition ${
               isSelected
                 ? "bg-[var(--primary)] text-white"
-                : "border border-black/15 text-[var(--foreground)] hover:border-[var(--primary)]/60 dark:border-white/20"
+                : "border border-white/20 text-[var(--foreground)] hover:border-[var(--primary)]/60"
             }`}
           >
             {option.label}
@@ -1432,7 +1432,7 @@ function FrequencyDropdown({ value, onChange }: FrequencyDropdownProps) {
                 className={`flex w-full items-center justify-between px-4 py-3 text-sm transition ${
                   isSelected
                     ? "bg-[var(--primary)]/10 text-[var(--foreground)]"
-                    : "text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/10"
+                    : "text-[var(--foreground)] hover:bg-white/10"
                 }`}
               >
                 <span>{option.label}</span>
